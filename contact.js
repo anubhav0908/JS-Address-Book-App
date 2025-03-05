@@ -1,4 +1,5 @@
-// UC2: Ability to ensure valid contacts are added
+// UC3: Ability to create an Address Book array and add new Contacts
+
 class Contact {
     constructor(firstName, lastName, address, city, state, zip, phoneNumber, email) {
         this.firstName = this.validateName(firstName, "First Name");
@@ -11,63 +12,72 @@ class Contact {
         this.email = this.validateEmail(email);
     }
 
-    // Validate Name (Starts with Capital, Min 3 chars)
     validateName(name, fieldName) {
         let nameRegex = /^[A-Z][a-zA-Z]{2,}$/;
-        if (!nameRegex.test(name)) {
-            throw new Error(`${fieldName} is invalid! Must start with a capital letter and have at least 3 characters.`);
-        }
+        if (!nameRegex.test(name)) throw new Error(`${fieldName} is invalid! Must start with a capital letter and have at least 3 characters.`);
         return name;
     }
 
-    // Validate Address, City, State (Min 4 chars)
     validateAddress(value, fieldName) {
-        if (value.length < 4) {
-            throw new Error(`${fieldName} is invalid! Must have at least 4 characters.`);
-        }
+        if (value.length < 4) throw new Error(`${fieldName} is invalid! Must have at least 4 characters.`);
         return value;
     }
 
-    // Validate ZIP (5-digit numeric)
     validateZip(zip) {
         let zipRegex = /^\d{5}$/;
-        if (!zipRegex.test(zip)) {
-            throw new Error("Invalid ZIP code! Must be 5 digits.");
-        }
+        if (!zipRegex.test(zip)) throw new Error("Invalid ZIP code! Must be 5 digits.");
         return zip;
     }
 
-    // Validate Phone Number (10-digit numeric)
     validatePhoneNumber(phoneNumber) {
         let phoneRegex = /^\d{10}$/;
-        if (!phoneRegex.test(phoneNumber)) {
-            throw new Error("Invalid phone number! Must be 10 digits.");
-        }
+        if (!phoneRegex.test(phoneNumber)) throw new Error("Invalid phone number! Must be 10 digits.");
         return phoneNumber;
     }
 
-    // Validate Email
     validateEmail(email) {
         let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            throw new Error("Invalid email format!");
-        }
+        if (!emailRegex.test(email)) throw new Error("Invalid email format!");
         return email;
     }
 
-    // Display Contact Info
     toString() {
         return `Name: ${this.firstName} ${this.lastName}, Address: ${this.address}, ${this.city}, ${this.state} - ${this.zip}, Phone: ${this.phoneNumber}, Email: ${this.email}`;
     }
 }
 
+// Address Book Class
+class AddressBook {
+    constructor() {
+        this.contacts = [];
+    }
+
+    addContact(contact) {
+        this.contacts.push(contact);
+        console.log("Contact added successfully!");
+    }
+
+    displayContacts() {
+        if (this.contacts.length === 0) {
+            console.log("Address Book is empty.");
+        } else {
+            console.log("Address Book:");
+            this.contacts.forEach(contact => console.log(contact.toString()));
+        }
+    }
+}
+
 // Example Usage
 try {
-    let contact1 = new Contact("Om", "Prakash", "456 Lane", "Delhi", "Delhi", "11001", "9876543210", "om.prakash@example.com");
-    console.log(contact1.toString());
+    let addressBook = new AddressBook();
 
+    let contact1 = new Contact("Om", "Prakash", "456 Lane", "Delhi", "Delhi", "11001", "9876543210", "om.prakash@example.com");
     let contact2 = new Contact("Deepansh", "Verma", "789 Market", "Mumbai", "Maharashtra", "40001", "9123456789", "deepansh.verma@example.com");
-    console.log(contact2.toString());
+
+    addressBook.addContact(contact1);
+    addressBook.addContact(contact2);
+
+    addressBook.displayContacts();
 } catch (error) {
     console.error(error.message);
 }
