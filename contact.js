@@ -130,6 +130,15 @@ class AddressBook {
         this.contacts.sort((a, b) => (a.firstName + a.lastName).localeCompare(b.firstName + b.lastName));
         console.log("Contacts sorted alphabetically by name.");
     }
+
+    sortContactsByCityStateZip() {
+        this.contacts.sort((a, b) => {
+            if (a.city !== b.city) return a.city.localeCompare(b.city);
+            if (a.state !== b.state) return a.state.localeCompare(b.state);
+            return a.zip.localeCompare(b.zip);
+        });
+        console.log("Contacts sorted by City, State, and Zip.");
+    }
 }
 
 // Example Usage
@@ -145,11 +154,8 @@ try {
     console.log("\nAddress Book:");
     addressBook.displayContacts();
 
-    console.log("\nCount by City and State:");
-    console.log(addressBook.getCountByCityOrState());
-
-    console.log("\nSorting contacts by name:");
-    addressBook.sortContactsByName();
+    console.log("\nSorting contacts by City, State, and Zip:");
+    addressBook.sortContactsByCityStateZip();
     addressBook.displayContacts();
 } catch (error) {
     console.error(error.message);
