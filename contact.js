@@ -1,5 +1,3 @@
-// UC3: Ability to create an Address Book array and add new Contacts
-
 class Contact {
     constructor(firstName, lastName, address, city, state, zip, phoneNumber, email) {
         this.firstName = this.validateName(firstName, "First Name");
@@ -57,6 +55,30 @@ class AddressBook {
         console.log("Contact added successfully!");
     }
 
+    findContact(firstName, lastName) {
+        return this.contacts.find(contact => contact.firstName === firstName && contact.lastName === lastName);
+    }
+
+    editContact(firstName, lastName, newDetails) {
+        let contact = this.findContact(firstName, lastName);
+        if (contact) {
+            Object.assign(contact, newDetails);
+            console.log("Contact updated successfully!");
+        } else {
+            console.log("Contact not found!");
+        }
+    }
+
+    deleteContact(firstName, lastName) {
+        const index = this.contacts.findIndex(contact => contact.firstName === firstName && contact.lastName === lastName);
+        if (index !== -1) {
+            this.contacts.splice(index, 1);
+            console.log("Contact deleted successfully!");
+        } else {
+            console.log("Contact not found!");
+        }
+    }
+
     displayContacts() {
         if (this.contacts.length === 0) {
             console.log("Address Book is empty.");
@@ -71,12 +93,19 @@ class AddressBook {
 try {
     let addressBook = new AddressBook();
 
-    let contact1 = new Contact("Om", "Prakash", "456 Lane", "Delhi", "Delhi", "11001", "9876543210", "om.prakash@example.com");
+    let contact1 = new Contact("Omm", "Prakash", "456 Lane", "Delhi", "Delhi", "11001", "9876543210", "om.prakash@example.com");
     let contact2 = new Contact("Deepansh", "Verma", "789 Market", "Mumbai", "Maharashtra", "40001", "9123456789", "deepansh.verma@example.com");
 
     addressBook.addContact(contact1);
     addressBook.addContact(contact2);
 
+    console.log("\nBefore Deleting:");
+    addressBook.displayContacts();
+
+    // Deleting Contact Om Prakash
+    addressBook.deleteContact("Om", "Prakash");
+
+    console.log("\nAfter Deleting:");
     addressBook.displayContacts();
 } catch (error) {
     console.error(error.message);
