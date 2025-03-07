@@ -125,6 +125,11 @@ class AddressBook {
             (contact.city === location || contact.state === location)
         ).map(contact => contact.toString());
     }
+
+    sortContactsByName() {
+        this.contacts.sort((a, b) => (a.firstName + a.lastName).localeCompare(b.firstName + b.lastName));
+        console.log("Contacts sorted alphabetically by name.");
+    }
 }
 
 // Example Usage
@@ -142,6 +147,10 @@ try {
 
     console.log("\nCount by City and State:");
     console.log(addressBook.getCountByCityOrState());
+
+    console.log("\nSorting contacts by name:");
+    addressBook.sortContactsByName();
+    addressBook.displayContacts();
 } catch (error) {
     console.error(error.message);
 }
