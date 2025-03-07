@@ -79,11 +79,15 @@ class AddressBook {
         }
     }
 
+    getContactCount() {
+        return this.contacts.reduce(count => count + 1, 0);
+    }
+
     displayContacts() {
         if (this.contacts.length === 0) {
             console.log("Address Book is empty.");
         } else {
-            console.log("Address Book:");
+            console.log(`Address Book (Total Contacts: ${this.getContactCount()}):`);
             this.contacts.forEach(contact => console.log(contact.toString()));
         }
     }
