@@ -12,7 +12,8 @@ class Contact {
 
     validateName(name, fieldName) {
         let nameRegex = /^[A-Z][a-zA-Z]{2,}$/;
-        if (!nameRegex.test(name)) throw new Error(`${fieldName} is invalid! Must start with a capital letter and have at least 3 characters.`);
+        if (!nameRegex.test(name)) 
+            throw new Error(`${fieldName} is invalid! Must start with a capital letter and have at least 3 alphabetic characters.`);
         return name;
     }
 
@@ -51,6 +52,10 @@ class AddressBook {
     }
 
     addContact(contact) {
+        if (this.contacts.some(c => c.firstName === contact.firstName && c.lastName === contact.lastName)) {
+            console.log("Duplicate contact! This person already exists in the Address Book.");
+            return;
+        }
         this.contacts.push(contact);
         console.log("Contact added successfully!");
     }
@@ -70,9 +75,9 @@ class AddressBook {
     }
 
     deleteContact(firstName, lastName) {
-        const index = this.contacts.findIndex(contact => contact.firstName === firstName && contact.lastName === lastName);
-        if (index !== -1) {
-            this.contacts.splice(index, 1);
+        let initialCount = this.contacts.length;
+        this.contacts = this.contacts.filter(contact => !(contact.firstName === firstName && contact.lastName === lastName));
+        if (this.contacts.length < initialCount) {
             console.log("Contact deleted successfully!");
         } else {
             console.log("Contact not found!");
@@ -83,6 +88,20 @@ class AddressBook {
         return this.contacts.reduce(count => count + 1, 0);
     }
 
+    getCountByCityOrState() {
+        let cityCount = this.contacts.reduce((acc, contact) => {
+            acc[contact.city] = (acc[contact.city] || 0) + 1;
+            return acc;
+        }, {});
+
+        let stateCount = this.contacts.reduce((acc, contact) => {
+            acc[contact.state] = (acc[contact.state] || 0) + 1;
+            return acc;
+        }, {});
+
+        return { cityCount, stateCount };
+    }
+
     displayContacts() {
         if (this.contacts.length === 0) {
             console.log("Address Book is empty.");
@@ -91,26 +110,38 @@ class AddressBook {
             this.contacts.forEach(contact => console.log(contact.toString()));
         }
     }
+
+    viewPersonsByCity(city) {
+        return this.contacts.filter(contact => contact.city === city).map(contact => contact.toString());
+    }
+
+    viewPersonsByState(state) {
+        return this.contacts.filter(contact => contact.state === state).map(contact => contact.toString());
+    }
+
+    searchPersonByCityOrState(name, location) {
+        return this.contacts.filter(contact => 
+            (contact.firstName === name || contact.lastName === name) && 
+            (contact.city === location || contact.state === location)
+        ).map(contact => contact.toString());
+    }
 }
 
 // Example Usage
 try {
     let addressBook = new AddressBook();
 
-    let contact1 = new Contact("Omm", "Prakash", "456 Lane", "Delhi", "Delhi", "11001", "9876543210", "om.prakash@example.com");
+    let contact1 = new Contact("OmK", "Prakash", "456 Lane", "Delhi", "Delhi", "11001", "9876543210", "om.prakash@example.com");
     let contact2 = new Contact("Deepansh", "Verma", "789 Market", "Mumbai", "Maharashtra", "40001", "9123456789", "deepansh.verma@example.com");
 
     addressBook.addContact(contact1);
     addressBook.addContact(contact2);
 
-    console.log("\nBefore Deleting:");
+    console.log("\nAddress Book:");
     addressBook.displayContacts();
 
-    // Deleting Contact Om Prakash
-    addressBook.deleteContact("Om", "Prakash");
-
-    console.log("\nAfter Deleting:");
-    addressBook.displayContacts();
+    console.log("\nCount by City and State:");
+    console.log(addressBook.getCountByCityOrState());
 } catch (error) {
     console.error(error.message);
 }
